@@ -81,29 +81,41 @@ namespace Serilog.Sinks.MicrosoftTeams
 
         private IEnumerable<MicrosoftTeamsMessageFact> GetFacts(LogEvent logEvent)
         {
-            yield return new MicrosoftTeamsMessageFact
+
+            if (_options.IncludeLevel)
             {
-                Name = "Level",
-                Value = logEvent.Level.ToString()
-            };
-            yield return new MicrosoftTeamsMessageFact
+                yield return new MicrosoftTeamsMessageFact
+                {
+                    Name = "Level",
+                    Value = logEvent.Level.ToString()
+                };
+            }
+
+            if (_options.IncludeMessageTemplate)
             {
-                Name = "MessageTemplate",
-                Value = logEvent.MessageTemplate.Text
-            };
+                yield return new MicrosoftTeamsMessageFact
+                {
+                    Name = "MessageTemplate",
+                    Value = logEvent.MessageTemplate.Text
+                };
+            }
 
             if (logEvent.Exception != null)
             {
                 yield return new MicrosoftTeamsMessageFact { Name = "Exception", Value = logEvent.Exception.ToString() };
             }
 
-            foreach (var property in logEvent.Properties)
+
+            if (_options.IncludeProperties)
             {
-                yield return new MicrosoftTeamsMessageFact
+                foreach (var property in logEvent.Properties)
                 {
-                    Name = property.Key,
-                    Value = property.Value.ToString(null, _options.FormatProvider)
-                };
+                    yield return new MicrosoftTeamsMessageFact
+                    {
+                        Name = property.Key,
+                        Value = property.Value.ToString(null, _options.FormatProvider)
+                    };
+                }
             }
         }
 

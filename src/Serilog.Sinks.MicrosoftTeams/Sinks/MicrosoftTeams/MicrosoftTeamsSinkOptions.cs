@@ -21,8 +21,12 @@ namespace Serilog.Sinks.MicrosoftTeams
         /// <param name="period">The time to wait between checking for event batches; defaults to 1 sec if not
         /// provided.</param>
         /// <param name="formatProvider">The format provider used for formatting the message.</param>
+        /// <param name="includeProperties">Include event log properties in Microsoft Teams card.</param>
+        /// <param name="includeLevel">Include event log level in Microsoft Teams card.</param>
+        /// <param name="includeMessageTemplate">Include event log message template in Microsoft Teams card.</param>
         public MicrosoftTeamsSinkOptions(string webHookUri, string title, int? batchSizeLimit = null,
-            TimeSpan? period = null, IFormatProvider formatProvider = null)
+            TimeSpan? period = null, IFormatProvider formatProvider = null, bool includeProperties = true, 
+            bool includeLevel = true, bool includeMessageTemplate = true)
         {
             if (webHookUri == null)
             {
@@ -39,6 +43,9 @@ namespace Serilog.Sinks.MicrosoftTeams
             BatchSizeLimit = batchSizeLimit ?? DefaultBatchSizeLimit;
             Period = period ?? DefaultPeriod;
             FormatProvider = formatProvider;
+            IncludeProperties = includeProperties;
+            IncludeLevel = includeLevel;
+            IncludeMessageTemplate = includeMessageTemplate;
         }
 
         /// <summary>
@@ -65,5 +72,20 @@ namespace Serilog.Sinks.MicrosoftTeams
         /// The format provider used for formatting the message.
         /// </summary>
         public IFormatProvider FormatProvider { get; }
+
+        /// <summary>
+        /// Include event log properties in Microsoft Teams card.
+        /// </summary>
+        public bool IncludeProperties { get; }
+
+        /// <summary>
+        /// Include event log level in Microsoft Teams card.
+        /// </summary>
+        public bool IncludeLevel { get; }
+
+        /// <summary>
+        /// Include event log message template in Microsoft Teams card.
+        /// </summary>
+        public bool IncludeMessageTemplate { get; }
     }
 }
